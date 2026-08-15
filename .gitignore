@@ -24,3 +24,6 @@ setup/parity/parity
 # M1 test binaries
 m1-data/bits/test_bits
 m1-data/bytes/bytes
+
+# Claude Code local settings (machine-specific, not shared)
+.claude/settings.local.json
