@@ -8,11 +8,11 @@
 
 set -e
 
-echo "+ gcc -std=c11 -Wall -Wextra -Werror -c bits.c -o bits.o"
-gcc -std=c11 -Wall -Wextra -Werror -c bits.c -o bits.o
+echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c bits.c -o bits.o"
+gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c bits.c -o bits.o
 
-echo "+ gcc -std=c11 -Wall -Wextra -Werror -c test_bits.c -o test_bits.o"
-gcc -std=c11 -Wall -Wextra -Werror -c test_bits.c -o test_bits.o
+echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c test_bits.c -o test_bits.o"
+gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c test_bits.c -o test_bits.o
 
 echo "+ gcc bits.o test_bits.o -o test_bits"
 gcc bits.o test_bits.o -o test_bits

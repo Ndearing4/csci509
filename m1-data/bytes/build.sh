@@ -7,11 +7,11 @@
 
 set -e
 
-echo "+ gcc -std=c11 -Wall -Wextra -Werror -c show_bytes.c -o show_bytes.o"
-gcc -std=c11 -Wall -Wextra -Werror -c show_bytes.c -o show_bytes.o
+echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c show_bytes.c -o show_bytes.o"
+gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c show_bytes.c -o show_bytes.o
 
-echo "+ gcc -std=c11 -Wall -Wextra -Werror -c main.c -o main.o"
-gcc -std=c11 -Wall -Wextra -Werror -c main.c -o main.o
+echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c main.c -o main.o"
+gcc -std=c11 -Wall -Wextra -Werror -g -O0 -c main.c -o main.o
 
 echo "+ gcc show_bytes.o main.o -o bytes"
 gcc show_bytes.o main.o -o bytes
