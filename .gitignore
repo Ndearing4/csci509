@@ -1,0 +1,26 @@
+# Build artifacts. Compiled output never gets committed -- it isn't portable
+# between machines anyway (see setup/parity/BUILD.md).
+*.o
+*.a
+*.so
+*.out
+core
+core.*
+
+# Compiled binaries. C executables have no extension, so they get named here
+# as they appear.
+setup/parity/parity
+
+# Editor leftovers
+*.swp
+*.swo
+*~
+.vscode/
+
+# Nothing in this repo is coursework, but if that ever changes: WWU treats
+# publicly readable assignment source as an academic honesty violation on its
+# own. Check before making any of this a public remote.
+
+# M1 test binaries
+m1-data/bits/test_bits
+m1-data/bytes/bytes
