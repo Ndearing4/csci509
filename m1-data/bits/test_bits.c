@@ -15,7 +15,12 @@
 #include <limits.h>
 #include "bits.h"
 
+/* Override for a fast debug build:  gcc -DN_RANDOM=200 ...
+ * 200k cases is right for "am I done yet", and far too slow to sit behind a
+ * breakpoint in gdb. See the debugging notes in ../README.md. */
+#ifndef N_RANDOM
 #define N_RANDOM     200000     /* random cases per puzzle */
+#endif
 #define MAX_REPORTS  4          /* failures printed per puzzle before summarizing */
 
 /* ---------- reference implementations (unrestricted C) ---------- */
