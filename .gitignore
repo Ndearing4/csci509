@@ -28,3 +28,4 @@ m1-data/bytes/bytes
 # Claude Code local settings (machine-specific, not shared)
 .claude/settings.local.json
 m1-data/bits/test_bits_dbg
+m1-data/c-syntax/tour
