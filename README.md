@@ -36,6 +36,7 @@ exec bits, and `make` timestamps honest. From Windows it's reachable at
 | | Module | Hours | Priority | Done |
 |---|---|---|---|---|
 | M0 | Toolchain | 1–2 | Critical | [ ] |
+| M1a | C syntax foundations | 1–2 | Critical | [ ] |
 | M1 | C data model | 6–10 | Critical | [ ] |
 | M2 | C memory & tooling | 8–14 | Critical | [ ] |
 | M3 | UNIX systems programming | 10–16 | Critical | [ ] |
@@ -46,7 +47,7 @@ exec bits, and `make` timestamps honest. From Windows it's reachable at
 | M4b | Bare-metal RISC-V kernel | 10–16 | **stretch** | [ ] |
 | ~~M5~~ | ~~C++ subset~~ | — | **dropped** | — |
 
-The committed set is **52–77h** against a ~70h budget, so it no longer fits
+The committed set is **53–79h** against a ~70h budget, so it no longer fits
 cleanly. M8 came out of the 247 log and earns its place — "memory management" is
 the *first* item in 447's catalog scope and the plan had nothing on it. **If time
 runs short, cut M7's reading breadth, not M8's.** Skimming Silberschatz is the
@@ -73,8 +74,8 @@ needed under every instructor.
 M4b also can't run on the department machines — it needs QEMU and a cross
 compiler, and there's no root there. It stays a WSL job.
 
-**Order:** M0 → M1 → M2 → M3 → M4a → M8 → M6, with M7 alongside from day one.
-**Depends on:** `M0 → M1 → M2 → {M3, M4a, M5}`, `M3 → M6`, `M2 → M8`, `M4a → M4b`.
+**Order:** M0 → M1a → M1 → M2 → M3 → M4a → M8 → M6, with M7 alongside from day one.
+**Depends on:** `M0 → M1a → M1 → M2 → {M3, M4a}`, `M3 → M6`, `M2 → M8`, `M4a → M4b`.
 
 ---
 
@@ -114,6 +115,38 @@ Recorded so the department diff has something to compare against:
 If the department box is also x86-64 Linux, all of this should match. A mismatch on
 `char` signedness or byte order means it isn't x86 — worth knowing before writing
 code that assumes otherwise.
+
+## M1a — C syntax foundations · 1–2h · `m1-data/c-syntax/`
+
+**Added 2026-08-17, mid-M1.** CS:APP is not a C tutorial. It teaches machine
+representation and assumes you already write C fluently. §2.1 lands endianness
+cleanly and then hands you a code block written in syntax it never taught. That
+gap is in the material, not in you, and re-reading §2.1 does not close it.
+
+`c-syntax/tour.c` covers the eight constructs the rest of M1 assumes, each
+demonstrated on a problem that is deliberately *not* `show_bytes`:
+
+1. `printf` — the first argument is always a format string; width and zero-pad flags
+2. `&`, the address-of operator
+3. Declaring a pointer; `*` in a declaration vs `*` in an expression
+4. Pointer arithmetic scaling by the pointed-to type
+5. `a[i]` is *defined* as `*(a + i)` — indexing is not a separate feature
+6. `for` loops, and why the counter is `size_t` rather than `int`
+7. Casting a pointer — same address, different read width
+8. Passing pointers so a function can modify its caller's variable
+
+Run it, then break it. Comments in sections 1, 2, 6 and 7 say what to change.
+Section 6 especially: swap `size_t i` for `int i`, rebuild, and read the
+`-Wsign-compare` error — that is the exact error CS:APP's `show_bytes` produces
+under these flags.
+
+- [ ] **Exit test:** predict the output of all eight sections before running
+      them, and explain why `int *p; p + 1` advances four bytes while a
+      one-byte pointer advances one.
+
+**Reading, if the tour is not enough:** Beej's Guide to C Programming (free,
+written for exactly this gap), K&R chapter 5, or Modern C levels 0–1. One of
+the three, not all three.
 
 ## M1 — C's data model · 6–10h · `m1-data/`
 
