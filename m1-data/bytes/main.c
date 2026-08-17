@@ -80,7 +80,7 @@ int main(void)
 
         printf("=== 6. struct layout and padding ===\n");
         {
-                struct gappy { char c; int i; char d; };
+                struct gappy {int i; char c;  char d; };
                 struct gappy g;
 
                 /* memset first: padding bytes are otherwise indeterminate, and

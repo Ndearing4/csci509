@@ -32,8 +32,8 @@
  *    Hint: De Morgan. Write out what ~(~x | ~y) is on paper, one bit at a time. */
 int bitAnd(int x, int y)
 {
-        (void)x; (void)y;       /* TODO: delete when you implement this */
-        return 0;
+        
+        return ~(~x|~y);
 }
 
 /* 2. bitXor -- x ^ y using only ~ and &.
@@ -43,8 +43,8 @@ int bitAnd(int x, int y)
  *    so De Morgan again to get the or. */
 int bitXor(int x, int y)
 {
-        (void)x; (void)y;       /* TODO */
-        return 0;
+        
+        return ~(x&y)&~(~x&~y);
 }
 
 /* 3. isEqual -- 1 if x == y, else 0.
@@ -52,8 +52,9 @@ int bitXor(int x, int y)
  *    Hint: what single operator gives exactly zero when two values match? */
 int isEqual(int x, int y)
 {
-        (void)x; (void)y;       /* TODO */
-        return 0;
+        
+        
+        return !(x^y);
 }
 
 /* 4. logicalNeg -- !x without using !.
@@ -63,8 +64,12 @@ int isEqual(int x, int y)
  *    sign bit separates zero from everything else. */
 int logicalNeg(int x)
 {
-        (void)x;                /* TODO */
-        return 0;
+        int ux = x;             
+
+        int signX = ux >> 31;
+        int twosCompXSign = (~ux + 1) >> 31;
+
+        return (signX | twosCompXSign) + 1; //if 0, it's compliment should also be 0. 
 }
 
 /* 5. getByte -- byte n of x, with n = 0 the least significant byte.
@@ -75,8 +80,10 @@ int logicalNeg(int x)
  *    first throws away the byte you wanted. */
 int getByte(int x, int n)
 {
-        (void)x; (void)n;       /* TODO */
-        return 0;
+        
+
+        int s = x >> (n << 3);
+        return s & 0x000000FF;
 }
 
 /* 6. replaceByte -- x with byte n replaced by c. 0 <= n <= 3, 0 <= c <= 255.
@@ -87,8 +94,12 @@ int getByte(int x, int n)
  *    defend against a c that is too big. */
 int replaceByte(int x, int n, int c)
 {
-        (void)x; (void)n; (void)c;      /* TODO */
-        return 0;
+        
+
+        int xEmpty = x & (~(0xFF<<(n<<3)));
+        int cMask = c << (n<<3);
+
+        return xEmpty + cMask;
 }
 
 /* 7. logicalShift -- x >> n but shifting in zeros, not sign bits. 0 <= n <= 31.
@@ -97,11 +108,23 @@ int replaceByte(int x, int n, int c)
  *    Hint: do the arithmetic shift, then clear the top n bits that got
  *    filled with ones. Building that mask is the puzzle. Careful: the
  *    obvious mask needs a shift by 32 when n is 0, which is undefined.
- *    Shift by 31 and then once more. */
+ *    Shift by 31 and then once more. 
+ logicalShift(0x00000001, 0x00000000) = 0x00000000, want 0x00000001
+  logicalShift(0xFFFFFFFF, 0x00000000) = 0x00000000, want 0xFFFFFFFF
+  logicalShift(0xFFFFFFFF, 0x00000001) = 0x00000000, want 0x7FFFFFFF
+  logicalShift(0xFFFFFFFF, 0x00000002) = 0x00000000, want 0x3FFFFFFF
+ 
+ 
+ */
 int logicalShift(int x, int n)
 {
-        (void)x; (void)n;       /* TODO */
-        return 0;
+        
+        // int sign = x >> 31;
+        int shiftedX = x >> n;
+
+        int mask = (1 << 31) >> n << 1;
+
+        return shiftedX & ~mask;
 }
 
 /* 8. isNegative -- 1 if x < 0, else 0.
@@ -109,8 +132,8 @@ int logicalShift(int x, int n)
  *    Hint: the sign bit already is the answer. Move it. */
 int isNegative(int x)
 {
-        (void)x;                /* TODO */
-        return 0;
+        
+        return (x >> 31) &1;
 }
 
 /* 9. sign -- return -1 if x < 0, 0 if x == 0, 1 if x > 0.
@@ -119,8 +142,16 @@ int isNegative(int x)
  *    Or it with "is x nonzero", which puzzle 4 taught you. */
 int sign(int x)
 {
-        (void)x;                /* TODO */
-        return 0;
+        
+        int retSign = ~0;
+
+        // int xc = ~x + 1;
+
+        int isNotNeg = ((x >> 31 ) & 1) ^1;  //1 if notNeg, 0 otherwize
+
+        int isNotZero = (!x^1) & isNotNeg;
+
+        return retSign + isNotNeg + isNotZero;
 }
 
 /* 10. conditional -- x ? y : z.
@@ -130,8 +161,17 @@ int sign(int x)
  *     trick in this whole file -- negation does it. */
 int conditional(int x, int y, int z)
 {
-        (void)x; (void)y; (void)z;      /* TODO */
-        return 0;
+        
+
+        int mask = !x; //1 if x=0, 0 otherwise
+
+        int maskFull = ~mask + 1; //if 0, then 000... if 1, then 1111....
+
+        //Ones mean false, so Z. 
+
+        int retVal = (z & maskFull) | (y & ~maskFull);
+
+        return retVal;
 }
 
 /* 11. absVal -- |x|. Assumes x != INT_MIN (whose absolute value does not fit).
@@ -141,8 +181,21 @@ int conditional(int x, int y, int z)
  *     complement negation when mask is all ones, and identity when it is zero. */
 int absVal(int x)
 {
-        (void)x;                /* TODO */
-        return 0;
+        
+        // int mask = 0xffffffff >> 1;
+
+        int sign = (x >> 31) &1;
+
+
+        int mask = !sign; //1 if x=0, 0 otherwise
+
+        int maskFull = ~mask + 1; //if 0, then 000... if 1, then 1111....
+
+        //Ones mean false, so Z. 
+
+        int retVal = (x & maskFull) | ((~x + 1) & ~maskFull);
+
+        return retVal;
 }
 
 /* 12. bitCount -- how many bits of x are 1.
@@ -153,6 +206,38 @@ int absVal(int x)
  *     This is the hardest one here. Leave it for last. */
 int bitCount(int x)
 {
-        (void)x;                /* TODO */
-        return 0;
+
+        // into bins of 2
+        // int fullMask = ~0;
+        // fullMask << 0;
+
+
+        int mask = 0x55;
+        mask = mask << 8 | mask;
+        mask = mask << 16 | mask;
+        int R1Counts = (x & mask) + ((x >> 1) & mask);
+
+        // into bins of 4
+        mask = 0x33;
+        mask = mask << 8 | mask;
+        mask = mask << 16 | mask;
+        int R2Counts = (R1Counts & mask) + ((R1Counts >> 2) & mask);
+
+        // into bins of 8
+        mask = 0x0f;
+        mask = mask << 8 | mask;
+        mask = mask << 16 | mask;
+        int R3Counts = (R2Counts & mask) + ((R2Counts >> 4) & mask);
+
+        //into bins of 16
+        mask = 0xff;
+        mask = mask << 16 | mask;
+        int R4Counts = (R3Counts & mask) + ((R3Counts >> 8) & mask);
+
+        //into bins of 32
+        mask = 0xff;
+        mask = mask | mask << 8;
+        int R5Counts = (R4Counts & mask) + ((R4Counts >> 16) & mask);
+
+        return R5Counts;
 }
