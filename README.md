@@ -189,6 +189,17 @@ hand. Header guards, `.h`/`.c` separation, `extern`.
       hand-written Makefile. Introduce a use-after-free deliberately and find it
       in gdb *before* confirming with valgrind.
 
+**Scaffolding is built and ready — see `m2-memory/README.md`.** Three exercises.
+`list/` has nine documented stubs and a harness that checks each of them by
+walking the nodes itself, plus a `check-makefile.sh` that grades the Makefile
+you write against seven requirements — including the two a first Makefile
+always gets wrong. `strings/` reimplements six of `<string.h>`, with a canary
+byte after every destination so `strncpy`'s two surprises are visible rather
+than described. `bugs/` is six programs with one planted memory bug each, all
+six building clean under `-Werror`, and a `HUNT.md` that insists on predict →
+gdb → valgrind in that order. One of the six valgrind is wrong about and one
+it is silent on, which is the point.
+
 *Stretch, revisit after M8:* 247 has students **write their own `malloc`** on top
 of `sbrk` (W8). It's the best single exercise for understanding what the heap
 actually is, and it's the closest thing in either prerequisite to real OS memory
@@ -211,6 +222,17 @@ descriptors, `open`/`read`/`write`/`close`/`lseek`, `errno`. The stdio layer on 
 - [ ] **Exit test:** `ls -la | grep foo > out.txt` works; Ctrl-C kills the child,
       not the shell; `ps` shows no zombies after a hundred commands.
 
+**Scaffolding is built and ready — see `m3-unix/README.md`.** `syscalls/` has a
+`mycat` stub with a test that diffs it against the real `cat` — stdout, stderr
+and exit status — plus `buffering.c`, which is finished rather than a stub and
+demonstrates in one run why the same program's output order changes when you
+pipe it. `procs/` has `spawn.c` (fork/exec/wait and status decoding) with a
+test covering exit codes, signal deaths and zombie count, and a `zombies.c`
+that walks you through watching a zombie in `ps`. `shell/` has the parser and
+shell stubs, a four-stage plan in `STAGES.md`, and `test-shell.sh`, which
+checks everything a pipe can check — Ctrl-C needs a real terminal and is a
+manual checklist instead.
+
 ## M4a — Linking and the compilation pipeline · 4–6h · `m4a-linking/`
 
 Preprocess → compile → assemble → link. Object files, symbols, relocation, static
@@ -228,6 +250,16 @@ source.
       predict which section a given variable lands in before checking with
       `readelf`, and walk through the disassembly of a two-argument function of
       your own naming what each instruction does to the stack.
+
+**Scaffolding is built and ready — see `m4a-linking/README.md`.** Mostly scripts
+that produce artifacts and worksheets asking you to predict what will be in
+them. `pipeline/` walks one file through `-E`, `-S`, `-c` and link, leaving
+every intermediate behind. `symbols/` has `break-it.sh`, which generates five
+real link errors with the `nm` output that diagnoses each — two of them produce
+an identical message for unrelated reasons — plus a section-prediction
+worksheet and a static-vs-shared library comparison. `disasm/` builds the same
+five functions at `-O0` and `-O2` side by side; `add2` is twelve instructions
+at one and two at the other, which is the `-g -O0` argument in one screen.
 
 ## M6 — Concurrency · 8–12h · `m6-concurrency/`
 
