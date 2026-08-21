@@ -22,6 +22,29 @@ procs/      fork, exec, wait, exit status, zombies and orphans
 shell/      the project: a shell with pipes, redirection, and Ctrl-C
 ```
 
+### Start here: the tour
+
+```sh
+cd syscalls
+./build.sh
+./fdtour
+```
+
+`fdtour.c` is the third tour, after `m1-data/c-syntax/tour.c` and
+`m2-memory/c-structs/tour.c`, and it exists because `mycat.c` asks you to
+write a read/write loop you have never seen. Finished, not a stub. Eight
+sections on a problem that is deliberately not `cat`: what a descriptor
+actually *is*, `write`'s return value, `read`'s three return cases, `lseek`
+and where the file offset lives, `errno` and its three rules, `fstat`, `dup2`
+(the shell's stage 2 in miniature), and the same file through stdio for
+contrast. It makes its own scratch file in `/tmp` and deletes it.
+
+There is a Java translation table at the top of it. `FileInputStream`,
+`BufferedReader`, `IOException` and try-with-resources all map onto something
+in this file, and the one that catches people is that **nothing is thrown** —
+an unchecked return value just carries on with a bad number. Fuller version in
+`reference/c-for-java-programmers.md`.
+
 `shell/` needs both of the others. Do not start it early — the four stages in
 `shell/STAGES.md` assume you have already written `spawn.c`.
 
@@ -69,6 +92,8 @@ Three rules, and the harnesses here check all three:
 
 ## Exit test
 
+- [ ] You can predict `./fdtour`'s output section by section, and say which
+      of the calls it makes are `man 2` and which are `man 3`
 - [ ] `./test-mycat.sh` passes — your `mycat` matches `cat` byte for byte,
       including on a file it cannot read, where it must match cat's *exit
       status* and put its message on stderr

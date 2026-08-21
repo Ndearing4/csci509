@@ -6,6 +6,32 @@ double pointer?
 Instant answer, with a correct one-line reason → skip to M3. Otherwise `list/`
 is built around exactly that question.
 
+## Start here: the tour
+
+```sh
+cd c-structs
+./build.sh
+```
+
+`c-structs/tour.c` is finished, not a stub — the sequel to
+`m1-data/c-syntax/tour.c`, and the same deal: every construct `list/` needs is
+demonstrated on a *different* problem, so assembling them is still your job.
+There is no linked list in it until section 6, and that one is three structs
+chained by hand on the stack with no `malloc` in sight.
+
+Eight sections: `struct`, `typedef`, `->` and pass-by-pointer, `malloc`/`free`,
+**the double pointer derived from first principles**, a self-referential
+struct, C strings, and the three places a variable can live.
+
+**It is written for someone coming from Java**, because you are, and because
+Java is helpful in two places and actively misleading in three. Section 1:
+`b = a` copies the whole struct rather than aliasing it. Section 5: Java has
+the *same* pass-by-value-of-a-reference behaviour that makes `Node **`
+necessary — you have hit this bug in Java without having a name for it.
+
+`reference/c-for-java-programmers.md` is the full translation table. Skim it
+once before the tour; come back to it when something looks arbitrary.
+
 ## The three exercises
 
 ```
@@ -89,6 +115,8 @@ being built.
 
 ## Exit test
 
+- [ ] You can predict all eight sections of `c-structs/tour.c` before running
+      it, and explain section 5 without hedging
 - [ ] `make` builds `list/` from a Makefile you wrote, and `./check-makefile.sh`
       reports clean
 - [ ] `./test_list` passes all nine groups, and `valgrind --leak-check=full

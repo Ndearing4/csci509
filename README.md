@@ -10,6 +10,7 @@ boxes as exit tests pass.
 
 Full plan: `/mnt/c/Users/natha/.claude/plans/okay-so-i-need-encapsulated-gadget.md`
 Course research: `reference/course-findings.md`
+Coming from Java: `reference/c-for-java-programmers.md`
 
 **This repo lives in the WSL filesystem at `~/csci509`** — real ext4, not `/mnt/c`.
 That's for parity with the department Linux machines, and it keeps line endings,
@@ -189,7 +190,13 @@ hand. Header guards, `.h`/`.c` separation, `extern`.
       hand-written Makefile. Introduce a use-after-free deliberately and find it
       in gdb *before* confirming with valgrind.
 
-**Scaffolding is built and ready — see `m2-memory/README.md`.** Three exercises.
+**Scaffolding is built and ready — see `m2-memory/README.md`.** Start with
+`c-structs/tour.c`, the sequel to M1a's tour and finished the same way: eight
+sections covering `struct`, `->`, `malloc`/`free`, C strings, the three
+storage durations, and **the double pointer derived rather than asserted** —
+demonstrated on a problem that is deliberately not a linked list. Written for
+someone arriving from Java, since Java's reference semantics are helpful in
+two of those sections and quietly misleading in three. Then three exercises.
 `list/` has nine documented stubs and a harness that checks each of them by
 walking the nodes itself, plus a `check-makefile.sh` that grades the Makefile
 you write against seven requirements — including the two a first Makefile
@@ -222,7 +229,11 @@ descriptors, `open`/`read`/`write`/`close`/`lseek`, `errno`. The stdio layer on 
 - [ ] **Exit test:** `ls -la | grep foo > out.txt` works; Ctrl-C kills the child,
       not the shell; `ps` shows no zombies after a hundred commands.
 
-**Scaffolding is built and ready — see `m3-unix/README.md`.** `syscalls/` has a
+**Scaffolding is built and ready — see `m3-unix/README.md`.** `syscalls/` opens
+with `fdtour.c`, the third finished tour — what a file descriptor actually is,
+`read`'s three return cases, `lseek`, `errno`'s three rules, `fstat`, and
+`dup2` as the shell's stage 2 in miniature — because `mycat` otherwise asks
+for a read/write loop you have never seen. Then a
 `mycat` stub with a test that diffs it against the real `cat` — stdout, stderr
 and exit status — plus `buffering.c`, which is finished rather than a stub and
 demonstrates in one run why the same program's output order changes when you

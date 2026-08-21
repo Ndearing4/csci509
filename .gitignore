@@ -54,3 +54,7 @@ m4a-linking/pipeline/artifacts/
 m4a-linking/disasm/artifacts/
 m4a-linking/symbols/broken/
 m4a-linking/symbols/libdemo/
+
+# The finished tours (binaries; the sources are tracked)
+m2-memory/c-structs/tour
+m3-unix/syscalls/fdtour
