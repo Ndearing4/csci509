@@ -6,8 +6,8 @@
 
 set -e
 
-echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 tour.c -o tour"
-gcc -std=c11 -Wall -Wextra -Werror -g -O0 tour.c -o tour
+echo "+ gcc -std=c11 -Wall -Wextra -Werror -g -O0 tour.c counters.c -o tour"
+gcc -std=c11 -Wall -Wextra -Werror -g -O0 tour.c counters.c -o tour
 
 echo
 ./tour

@@ -19,9 +19,10 @@ demonstrated on a *different* problem, so assembling them is still your job.
 There is no linked list in it until section 6, and that one is three structs
 chained by hand on the stack with no `malloc` in sight.
 
-Eight sections: `struct`, `typedef`, `->` and pass-by-pointer, `malloc`/`free`,
+Nine sections: `struct`, `typedef`, `->` and pass-by-pointer, `malloc`/`free`,
 **the double pointer derived from first principles**, a self-referential
-struct, C strings, and the three places a variable can live.
+struct, C strings, the three places a variable can live, and `extern` — one
+global's definition shared across files.
 
 **It is written for someone coming from Java**, because you are, and because
 Java is helpful in two places and actively misleading in three. Section 1:
@@ -115,21 +116,71 @@ being built.
 
 ## Exit test
 
-- [ ] You can predict all eight sections of `c-structs/tour.c` before running
-      it, and explain section 5 without hedging
-- [ ] `make` builds `list/` from a Makefile you wrote, and `./check-makefile.sh`
+- [X] You can predict all nine sections of `c-structs/tour.c` before running
+      it, explain section 5 without hedging, and say why `extern` needs
+      exactly one definition no matter how many files declare it
+- [x] `make` builds `list/` from a Makefile you wrote, and `./check-makefile.sh`
       reports clean
-- [ ] `./test_list` passes all nine groups, and `valgrind --leak-check=full
+- [x] `./test_list` passes all nine groups, and `valgrind --leak-check=full
       ./test_list` reports zero leaks and zero errors
 - [ ] `./build.sh` in `strings/` passes, including the three truncation cases
 - [ ] All six bugs in `bugs/` located in gdb, with the line number written down
       **before** valgrind confirmed it
-- [ ] You can explain the double pointer without hedging
+- [x] You can explain the double pointer without hedging
 
 ## gdb, the twelve commands that cover it
 
 Everything downstream assumes these. There is no exercise for them — use them
 on `bugs/` until you stop looking them up.
+
+### One session, so the table below isn't abstract
+
+This uses the already-built `c-structs/tour` binary, not one of the six
+planted bugs — it exists to show the *shape* of a session, and using a
+planted bug here would spoil it.
+
+```
+$ cd c-structs && gdb ./tour
+(gdb) break s5_double_pointer
+Breakpoint 1 at 0x1a3c: file tour.c, line 264.
+(gdb) run
+Starting program: /home/you/csci509/m2-memory/c-structs/tour
+...
+Breakpoint 1, s5_double_pointer () at tour.c:264
+264             Item *selected = NULL;
+(gdb) next
+266             printf("--- 5. the double pointer ---\n");
+(gdb) next
+--- 5. the double pointer ---
+268             select_first_broken(selected);
+(gdb) step
+select_first_broken (sel=0x0) at tour.c:249
+249             sel = &catalogue[0];
+(gdb) next
+253                 inside select_first_broken: sel->id = 10
+(gdb) print sel
+$1 = (Item *) 0x555555558040 <catalogue>
+(gdb) backtrace
+#0  select_first_broken (sel=0x555555558040 <catalogue>) at tour.c:253
+#1  0x0000555555555432 in s5_double_pointer () at tour.c:268
+#2  0x0000555555555891 in main () at tour.c:487
+(gdb) finish
+Run till exit from #0  select_first_broken (sel=...) at tour.c:253
+s5_double_pointer () at tour.c:269
+269             printf("  after select_first_broken(selected):  selected = %s\n",
+(gdb) print selected
+$2 = (Item *) 0x0
+```
+
+That last `print` is the whole lesson: inside the call, `sel` held the
+catalogue's address; back in the caller, `selected` is still NULL. `step`
+went *into* the call because there is source for it; `next` would have
+stepped over it, the way you'd step over `printf`.
+
+Run this yourself — the addresses will differ; the shape of the session
+won't.
+
+### The reference, once you've seen one session
 
 | | |
 |---|---|

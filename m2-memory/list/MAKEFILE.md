@@ -16,6 +16,24 @@ A Makefile is a set of "this file depends on those files, and here is how to
 rebuild it" facts. `make` works out the order and skips work that is already
 done. The difference shows the first time you change one file out of two.
 
+## The rule skeleton, once, concretely
+
+Every Makefile rule is this shape:
+
+```makefile
+target: prereq1 prereq2
+	recipe-line-1
+	recipe-line-2
+```
+
+`target` is the file to build, the prereqs are what it depends on, and the
+recipe lines are shell commands that build it — indented with one literal
+TAB, not spaces. `make` compares the target's timestamp against each
+prerequisite's and reruns the recipe only if a prerequisite is newer, or the
+target doesn't exist yet. Every rule you write below (`all`, `list.o`,
+`test_list.o`, `test_list`, `clean`) is an instance of exactly this shape;
+the numbered list is the parts of it that are easy to get wrong.
+
 ## What it must do
 
 `check-makefile.sh` verifies all seven:

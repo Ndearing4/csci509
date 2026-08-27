@@ -13,6 +13,8 @@
 
 #ifndef MYSTR_H
 #define MYSTR_H
+/* Header guard -- see c-structs/counters.h for what this prevents and why
+ * it matters once a header is shared across more than one .c file. */
 
 #include <stddef.h>
 

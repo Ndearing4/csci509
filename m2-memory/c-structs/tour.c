@@ -37,6 +37,7 @@
 #include <stdlib.h>     /* malloc, free */
 #include <string.h>     /* strlen, strcpy */
 #include <stddef.h>     /* size_t, offsetof */
+#include "counters.h"   /* extern int bump_count; void bump(void); */
 
 /* ------------------------------------------------------------------ *
  * 1. struct: several variables, bundled and given one name.
@@ -478,6 +479,40 @@ static void s8_storage(void)
          * windows. That is not a coincidence; it is the definition. */
 }
 
+/* ------------------------------------------------------------------ *
+ * 9. extern: one global's definition, shared across files.
+ * ------------------------------------------------------------------ */
+static void s9_extern(void)
+{
+        printf("--- 9. extern: sharing one global across files ---\n");
+
+        printf("  bump_count starts at %d (defined once, in counters.c)\n",
+               bump_count);
+        bump();
+        bump();
+        bump();
+        printf("  after three calls to bump(): bump_count = %d\n", bump_count);
+
+        /* counters.h has this DECLARED with `extern` -- every file that
+         * #includes it can read and write bump_count. counters.c has it
+         * DEFINED, with no extern, no static: that is the one file whose
+         * storage this name refers to. tour.c never defines bump_count; it
+         * only borrows the definition counters.c provides.
+         *
+         * Contrast with section 8's static_var: that one is `static` at
+         * file scope, which is the opposite of extern -- invisible outside
+         * tour.c. No other .c file could write `extern int static_var;`
+         * and reach it; the linker would refuse. static hides a global,
+         * extern shares one, and a name is never both at once.
+         *
+         * Try it: delete counters.c from build.sh's gcc command line and
+         * rebuild. You get "undefined reference to bump_count" from the
+         * LINKER, not the compiler -- gcc was satisfied with the
+         * declaration alone; ld is the one that needed the definition.
+         * That error is worth seeing on purpose once; M4a's symbols/
+         * exercise is built entirely out of errors shaped like it. */
+}
+
 int main(void)
 {
         s1_struct();         putchar('\n');
@@ -487,6 +522,7 @@ int main(void)
         s5_double_pointer(); putchar('\n');
         s6_self_reference(); putchar('\n');
         s7_strings();        putchar('\n');
-        s8_storage();
+        s8_storage();        putchar('\n');
+        s9_extern();
         return 0;
 }

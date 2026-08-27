@@ -61,10 +61,10 @@ exams but thin on 509 relevance — enough to not be surprised by it, then move 
 
 ## Exit test
 
-- [ ] All twelve puzzles pass `./build.sh`
-- [ ] `./check-rules.sh` reports clean
-- [ ] `show_bytes` works on int, float, double, struct, and pointer
-- [ ] You can explain, without running it, what section 6 prints and why
+- [x] All twelve puzzles pass `./build.sh`
+- [x] `./check-rules.sh` reports clean
+- [x] `show_bytes` works on int, float, double, struct, and pointer
+- [x] You can explain, without running it, what section 6 prints and why
 
 ## Undefined behavior to stay clear of
 

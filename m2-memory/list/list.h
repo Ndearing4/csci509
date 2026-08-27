@@ -13,6 +13,9 @@
 
 #ifndef LIST_H
 #define LIST_H
+/* Header guard -- prevents this file's Node typedef and prototypes from
+ * being parsed twice if two .c files that both need list.h land in the
+ * same build. Full explanation: c-structs/counters.h. */
 
 #include <stddef.h>
 
