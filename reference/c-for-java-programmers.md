@@ -159,6 +159,28 @@ would expect, and why that is idiomatic rather than a code smell.
 
 ---
 
+## Files and I/O
+
+The fuller version of the table at the top of `m3-unix/syscalls/fdtour.c`:
+
+| Java | C, at this level |
+|---|---|
+| `new FileInputStream(path)` | `open(path, O_RDONLY)` → an `int` |
+| `in.read(buf)` | `read(fd, buf, n)` → a count, or -1 |
+| `catch (IOException e)` | check the return value, then read `errno` |
+| `e.getMessage()` | `strerror(errno)` |
+| try-with-resources | `close(fd)`, by hand, on every path |
+| `BufferedReader` | the stdio layer — `fopen`/`fgets`/`fclose` |
+
+Same errno rules as above, plus one that only shows up here: `man 2 write` and
+`man 3 fwrite` are not the same function wearing two names. Section 2 is a
+trap into the kernel; section 3 is ordinary code built on top of it, and it
+decides on its own when to actually call `write`. `man -f name` says which
+section something is in when you are not sure. `m3-unix/README.md` has the
+practical difference in a table.
+
+---
+
 ## The compilation model
 
 Java compiles per class, resolves names at load time, and `import` finds

@@ -98,7 +98,7 @@ static int walk(const char *path)
 {
         (void)path;
         /* Keeps -Wunused-function quiet while the stub is still a
-         * stub. Delete this line once type_char and report are is called for real. */
+         * stub. Delete this line once type_char and report are called for real. */
         (void)type_char;
         (void)report;
         return 0;

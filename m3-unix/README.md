@@ -11,8 +11,9 @@ This is the 347 gap and the assumed background whoever teaches 509. Everything
 here is the interface between a program and the kernel, which is the subject of
 the course.
 
-**Reading: APUE ch 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15.2–15.3.** Read the
-chapter for a section before doing it, not after.
+**Reading: APUE ch 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15.2–15.3, and skim
+15.7 and 15.9** (message queues, shared memory — no exercise here, just the
+names). Read the chapter for a section before doing it, not after.
 
 ## The three exercises, in order
 

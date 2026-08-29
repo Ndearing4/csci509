@@ -215,13 +215,14 @@ management. Skip it on the first pass through M2; come back if M8 lands early.
 ## M3 — UNIX systems programming · 10–16h · `m3-unix/`
 
 The 347 gap, and the assumed background whoever teaches. APUE Ch 1, 3, 4, 5, 6, 7,
-8, 9, 10, 11, 12, 15.2–15.3.
+8, 9, 10, 11, 12, 15.2–15.3, and skim 15.7 and 15.9.
 
 `man 2` vs `man 3` — the syscall/library boundary is exam material. File
 descriptors, `open`/`read`/`write`/`close`/`lseek`, `errno`. The stdio layer on top
 (`FILE*`, buffering, why it differs from raw fds). `stat`, `opendir`/`readdir`.
 `fork`, `exec*`, `wait`/`waitpid`, exit statuses, orphans and zombies. `pipe` and
-`dup2`. Signals via `sigaction`. Skim shared memory and message queues.
+`dup2`. Signals via `sigaction`. Skim shared memory (15.9) and message queues
+(15.7) — no exercise here, just enough to recognize the names.
 
 **Project: a small shell** — prompt, parse into argv, fork/exec, wait, `|`, `<`,
 `>`, Ctrl-C.
