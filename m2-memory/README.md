@@ -124,7 +124,7 @@ being built.
 - [x] `./test_list` passes all nine groups, and `valgrind --leak-check=full
       ./test_list` reports zero leaks and zero errors
 - [x] `./build.sh` in `strings/` passes, including the three truncation cases
-- [ ] All six bugs in `bugs/` located in gdb, with the line number written down
+- [x] All six bugs in `bugs/` located in gdb, with the line number written down
       **before** valgrind confirmed it
 - [x] You can explain the double pointer without hedging
 

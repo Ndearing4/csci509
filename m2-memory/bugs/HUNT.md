@@ -8,6 +8,13 @@ plausible output.
 ./build.sh
 ```
 
+`build.sh` suppresses `-Wuse-after-free` and `-Wdangling-pointer`. GCC 12
+folded the first into `-Wall`, GCC 13 folded in the second, and they are
+exactly bug1 and bug6 â€” on a new-enough GCC (this repo's is 15.2.0),
+`-Werror` alone stops the build on two of the six before you get to gdb or
+valgrind at all. Suppressing them is what keeps "the compiler found none of
+them" true here; on an older GCC the flags are no-ops.
+
 ## The order is the exercise
 
 For each program, in this order, and write the answer down before moving on:
@@ -31,12 +38,12 @@ prediction against a tool, and finding out where each tool is blind.
 
 | | bug | predicted line | found in gdb at | valgrind says | agreed? |
 |---|---|---|---|---|---|
-| 1 | use after free | | | | |
-| 2 | double free | | | | |
-| 3 | leak | | | | |
-| 4 | heap overflow | | | | |
-| 5 | uninitialised read | | | | |
-| 6 | dangling stack pointer | | | | |
+| 1 | use after free | 61 - assigning new mem address after memory is freed | 61 - address of *t->next cannot be accessed after free |61| **yes**|
+| 2 | double free | 39/64 - cached and msg point to same memory, so free one frees both | breaks at clear_cache() |39| **yes**|
+| 3 | leak | 55 - *up is freed, but *name still is on the stack (heap?) | N/A |No specific line, bug memory is leaking|N/A??|
+| 4 | heap overflow | 70 (unconfident) freeing memory from heap needs to be done in same scope | 40 Allocated nbucket spaces in memory, only needed nbucket -1.  | ` Invalid write of size 4` at line 41 | Nope I missed this one |
+| 5 | uninitialised read | 32 we allocate n bytes without necessarily using all n | GDB doesn't rly provide any issues. Everything it shows makes sense - this bug feels entirely caused by the user.  |33| **yes**|
+| 6 | dangling stack pointer | 78 - `name` should die with the stack in the function (and it totally might) but the report still points to that mem | Concurs with my analysis i think |N/A| yes|
 
 Two rows are not like the others, and noticing that is most of the value here:
 
@@ -46,7 +53,7 @@ Two rows are not like the others, and noticing that is most of the value here:
 - **Bug 6's valgrind answer is wrong.** It reports "uninitialised value",
   which is a different bug with a different fix, blames a frame it can only
   print as `???`, and fires on the line that prints the *correct* string.
-  `gcc -fsanitize=address` names it properly — but only when asked:
+  `gcc -fsanitize=address` names it properly ï¿½ but only when asked:
   `ASAN_OPTIONS=detect_stack_use_after_return=1`, since that check is off by
   default. Plain ASan is silent. Run all three and compare.
 

@@ -11,7 +11,13 @@
 
 set -e
 
-CFLAGS="-std=c11 -Wall -Wextra -Werror -g -O0"
+# GCC 12+ added -Wuse-after-free and GCC 13+ added -Wdangling-pointer to
+# -Wall, and both are exactly bug1 and bug6's planted bugs. Left on, -Werror
+# would catch two of the six at compile time and the "the compiler found
+# none of them" lesson would be false on this toolchain. Suppressed here so
+# the exercise still starts from a clean build; gdb/valgrind/ASan are still
+# where you're meant to find them.
+CFLAGS="-std=c11 -Wall -Wextra -Werror -Wno-use-after-free -Wno-dangling-pointer -g -O0"
 
 for src in bug1_uaf.c bug2_double_free.c bug3_leak.c \
            bug4_overflow.c bug5_uninit.c bug6_dangling.c; do
