@@ -95,7 +95,7 @@ Three rules, and the harnesses here check all three:
 
 - [ ] You can predict `./fdtour`'s output section by section, and say which
       of the calls it makes are `man 2` and which are `man 3`
-- [ ] `./test-mycat.sh` passes — your `mycat` matches `cat` byte for byte,
+- [x] `./test-mycat.sh` passes — your `mycat` matches `cat` byte for byte,
       including on a file it cannot read, where it must match cat's *exit
       status* and put its message on stderr
 - [ ] You can explain every line of `buffering.c`'s output before running it,

@@ -51,11 +51,43 @@
  * errno == EINTR and nothing has gone wrong. Retry. `man 7 signal` explains
  * when that can happen.
  */
+
+// static void die(const char *what)
+// {
+//         perror(what);
+//         exit(EXIT_FAILURE);
+// }
+
 static int copy_fd(int in, int out)
 {
         (void)in;
         (void)out;
-        return -1;
+
+        //in - fd of target file?
+        //out - fd of output file?
+
+        char buf[4096];
+        ssize_t n;
+        ssize_t n_out = 0;
+
+        while ((n = read(in, buf, sizeof buf)) > 0) {
+                n_out = write(out, buf, n);
+        }
+
+        if (n == -1) {
+                
+                //set errno to n_out and return
+                return n;
+        }
+
+        if (n_out == -1) {
+                
+                //set errno to n_out and return
+                return n_out;
+        }
+
+        return 0;
+
 }
 
 /*
@@ -84,8 +116,43 @@ int main(int argc, char **argv)
         (void)argv;
         /* Keeps -Wunused-function quiet while the stub is still a
          * stub. Delete this line once copy_fd is called for real. */
-        (void)copy_fd;
+        
+         
+        int fd_in;
+        int return_code = 0;
+        errno = 0;
+        
+        if (argc == 1 || (argc == 2 && *argv[1] == '-')) {
+             
+                copy_fd(STDIN_FILENO, STDOUT_FILENO);
 
-        fprintf(stderr, "mycat: not implemented yet\n");
-        return EXIT_FAILURE;
+                return 0;
+        }
+        
+        //give enough space for all possible args. Should be args # of pointers
+        // char *err_mgs[argc];
+
+
+        for (size_t i = 1; (int)i < argc; i++) {
+                
+                char *file_in = argv[i];
+                
+                fd_in = open(file_in, O_RDONLY);
+
+                int exit_status = copy_fd(fd_in, STDOUT_FILENO);
+
+                //if exit_status == -1, add to file error list. 
+                if (exit_status == -1) {
+                        
+                        //idk what the correct way to do this is
+                        fprintf(stderr, "mycat: %s: %s", argv[i], strerror(errno));
+                        return_code = 1;
+                }
+
+                
+        }
+
+
+        // fprintf(stderr, "mycat: not implemented yet\n");
+        return return_code;
 }
